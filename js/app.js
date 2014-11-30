@@ -1,15 +1,4 @@
-// List of Seattle Traffic Cameras
-// http://data.seattle.gov/resource/65fc-btcc.json
-
 "use strict";
-
-//put your code here to create the map, fetch the list of traffic cameras
-//and add them as markers on the map
-//when a user clicks on a marker, you should pan the map so that the marker
-//is at the center, and open an InfoWindow that displays the latest camera
-//image
-//you should also write the code to filter the set of markers when the user
-//types a search phrase into the search box
 
 $(document).ready(function() {
 	var mapOptions = {
@@ -21,7 +10,7 @@ $(document).ready(function() {
 	var map = new google.maps.Map(mapElem, mapOptions);
 	var infoWindow = new google.maps.InfoWindow();
 	var markers = [];
-	var trafficCamera = "1417362329_boot.png";
+	var trafficCamera = "1417398990_boot.png";
 	$.getJSON('http://data.seattle.gov/resource/65fc-btcc.json')
 		.done(function(data) {
 			data.forEach(function(data) {
@@ -45,11 +34,22 @@ $(document).ready(function() {
 						marker.setAnimation(null);
 					} else {
 					    marker.setAnimation(google.maps.Animation.BOUNCE);
+					    setTimeout(function() {
+					    	marker.setAnimation(null);
+					    }, 700);
 					}
 				})
 				google.maps.event.addListener(map, 'click', function() {
 					infoWindow.close();
 				})
+				$("search").bind('search keyup'), function() {
+					var search = this.value.toLowerCase();
+					if(!camera.cameralabel.toLowerCase().indexOf(search) < 0) {
+						marker.setMap(map);
+					} else {
+						marker.setMap(null);
+					}
+				}
 			});
 		})
 		.fail(function(error) {
